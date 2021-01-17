@@ -6,7 +6,26 @@
             layout-align="start start">
         <div style="width: 100%" layout="row" layout-align="start start">
         <md-input-container>
-          <input ng-pattern="/^([1-9]|10)$/" ng-model="foulingController.av">
-          <label>AV</label>
+          <input ng-pattern="/^([0-9]|1[0-8])$/" ng-model="fameController.p1">
+          <label>Player 1 FF</label>
         </md-input-container>
+        <md-input-container>
+          <input ng-pattern="/^([0-9]|1[0-8])$/" ng-model="fameController.p2">
+          <label>Player 2 FF</label>
+        </md-input-container>
+        </div>
+        <div style="width: 100%" layout="column" layout-align="start, start">
+          <md-button ng-click="fameController.calculate()" ng-disabled="fameController.p1 == null ||fameController.p2 == null" class="md-raised md-accent">Calculate</md-button>
+        </div>
+        <md-card class="md-block" flex="noshrink" style="width: 500px">
+          <md-card-content>
+            <md-list>
+            <md-list-item>Player 1 has +2 Fame: {{fameController.p1bytwo}}</md-list-item>
+            <md-list-item>Player 1 has +1 Fame: {{fameController.p1byone}}</md-list-item>
+            <md-list-item>No Fame Difference: {{fameController.draw}}</md-list-item>
+            <md-list-item>Player 2 has +1 Fame: {{fameController.p2byone}}</md-list-item>
+            <md-list-item>Player 2 has +2 Fame: {{fameController.p2bytwo}}</md-list-item>
+             </md-list>
+          </md-card-content>
+          </md-card>
         </form>
