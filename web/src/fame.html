@@ -10,24 +10,23 @@
           </md-toolbar>
           <md-card-title>
             <md-card-title-text>
-              <span class="md-headline">Victim)</span>
+              <span class="md-headline">Victim</span>
             </md-card-title-text>
           </md-card-title>
-          <md-card-content layout="column" layout-align="start start">
-            <md-input-container>
-              <input ng-pattern="/^([0-9]|1[0-8])$/" ng-model="fameController.p1">
-              <label>Player 1 FF</label>
-            </md-input-container>
-            <md-input-container>
-              <input ng-pattern="/^([0-9]|1[0-8])$/" ng-model="fameController.p2">
-              <label>Player 2 FF</label>
-            </md-input-container>
-            <md-card-actions layout="column" layout-align="start">
-                <md-button ng-click="fameController.calculate()" ng-disabled="fameController.p1 == null ||fameController.p2 == null" class="md-raised md-accent">Calculate</md-button>
-            </md-card-actions>
-            <div style="width: 100%" layout="column" layout-align="start, start">
-              <md-button ng-click="fameController.calculate()" ng-disabled="fameController.p1 == null ||fameController.p2 == null" class="md-raised md-accent">Calculate</md-button>
+          <md-card-content layout="column">
+            <div style="width: 100%" layout="row" layout-align="start start">
+              <md-input-container>
+                <input ng-pattern="/^([0-9]|1[0-8])$/" ng-model="fameController.p1">
+                <label>Player 1 FF</label>
+              </md-input-container>
+              <md-input-container>
+                <input ng-pattern="/^([0-9]|1[0-8])$/" ng-model="fameController.p2">
+                <label>Player 2 FF</label>
+              </md-input-container>
             </div>
+            <md-card-actions layout="column">
+                <md-button ng-click="fameController.calculate()" ng-disabled="fameController.p1 == null ||fameController.p2 == null">Calculate</md-button>
+            </md-card-actions>
           </md-card-content>
         </md-card>
         <md-card class="md-block" flex="noshrink" style="width: 500px">
