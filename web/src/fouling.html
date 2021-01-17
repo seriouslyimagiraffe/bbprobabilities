@@ -5,43 +5,59 @@
           flex="noshrink"
           layout="column"
           layout-align="start start">
-      <div style="width: 100%" layout="row" layout-align="start start">
-        <md-input-container>
-          <input ng-pattern="/^([1-9]|10)$/" ng-model="foulingController.av">
-          <label>AV</label>
-        </md-input-container>
-        <md-input-container>
-          <input ng-pattern="/^[0-7]$/" ng-model="foulingController.numAssists">
-          <label>Number of Assists</label>
-        </md-input-container>
-        <md-input-container>
-          <input ng-pattern="/^[0-5]$/" ng-model="foulingController.numBribes">
-          <label>Number of Bribes</label>
-        </md-input-container>
-      </div>
-      <div style="width: 100%" layout="row" layout-align="start, start">
-        <md-checkbox md-no-ink aria-label="DirtyPlayer" ng-model="foulingController.dirtyPlayer" class="md-primary">
-          Dirty Player
-        </md-checkbox>
-        <md-checkbox md-no-ink aria-label="Niggled" ng-model="foulingController.niggled" class="md-primary">
-          Niggled
-        </md-checkbox>
-        <md-checkbox md-no-ink aria-label="ThickSkull" ng-model="foulingController.thickSkull" class="md-primary">
-          Thick Skull
-        </md-checkbox>
-        <md-checkbox md-no-ink aria-label="Stunty" ng-model="foulingController.stunty" class="md-primary">
-          Stunty
-        </md-checkbox>
-      </div>
-      <div style="width: 100%" layout="column" layout-align="start, start">
-        <md-button ng-click="foulingController.stomp()" ng-disabled="foulingController.av == null" class="md-raised md-accent">STOMP</md-button>
-      </div>
-      <md-card class="md-block" flex="noshrink" style="width: 500px">
+      <md-card class="md-block">
+        <md-toolbar class="md-accent" md-scroll-shrink>
+          <div class="md-toolbar-tools">Input</div>
+        </md-toolbar>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Victim</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content layout="column">
+          <div style="width: 100%" layout="row" layout-align="start start">
+            <md-input-container>
+              <input ng-pattern="/^([1-9]|10)$/" ng-model="foulingController.av">
+              <label>AV</label>
+            </md-input-container>
+            <md-input-container>
+              <input ng-pattern="/^[0-7]$/" ng-model="foulingController.numAssists">
+              <label>Number of Assists</label>
+            </md-input-container>
+            <md-input-container>
+               <input ng-pattern="/^[0-5]$/" ng-model="foulingController.numBribes">
+               <label>Number of Bribes</label>
+            </md-input-container>
+          </div>
+          <div style="width: 100%" layout="row" layout-align="start, start">
+            <md-checkbox md-no-ink aria-label="DirtyPlayer" ng-model="foulingController.dirtyPlayer" class="md-primary">
+              Dirty Player
+            </md-checkbox>
+            <md-checkbox md-no-ink aria-label="Niggled" ng-model="foulingController.niggled" class="md-primary">
+              Niggled
+            </md-checkbox>
+            <md-checkbox md-no-ink aria-label="ThickSkull" ng-model="foulingController.thickSkull" class="md-primary">
+              Thick Skull
+            </md-checkbox>
+            <md-checkbox md-no-ink aria-label="Stunty" ng-model="foulingController.stunty" class="md-primary">
+              Stunty
+            </md-checkbox>
+          </div>
+          <md-card-actions layout="column">
+           <md-button ng-click="foulingController.stomp()" 
+                      ng-disabled="foulingController.av == null" 
+                      class="md-primary">STOMP</md-button>
+          </md-card-actions>
+        </md-card>
+      <md-card class="md-block" flex="noshrink" style="width: 625px">
+        <md-toolbar md-scroll-shrink>
+          <div class="md-toolbar-tools">Results</div>
+        </md-toolbar>
         <md-card-content>
           <md-list>
-          <md-list-item>Ejection probability: {{foulingController.ejection}}</md-list-item>
-          <md-list-item>Removal probability: {{foulingController.removal}}</md-list-item>
-          <md-list-item>Casualty probability: {{foulingController.cas}}</md-list-item>
+            <md-list-item>Ejection probability: {{foulingController.ejection}}</md-list-item>
+            <md-list-item>Removal probability: {{foulingController.removal}}</md-list-item>
+            <md-list-item>Casualty probability: {{foulingController.cas}}</md-list-item>
           </md-list>
         </md-card-content>
       </md-card>

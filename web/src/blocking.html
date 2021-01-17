@@ -7,6 +7,9 @@
         layout="column"
         layout-align="start start">
     <md-card class="md-block">
+      <md-toolbar class="md-accent" md-scroll-shrink>
+          <div class="md-toolbar-tools">Input</div>
+      </md-toolbar>
       <md-card-title>
         <md-card-title-text>
           <span class="md-headline">Victim (skills)</span>
@@ -89,7 +92,10 @@
         </md-button>
       </md-card-actions>
     </md-card>
-    <md-card class="md-block" flex="noshrink" style="width: 500px">
+    <md-card class="md-block" flex="noshrink" style="width: 657px">
+      <md-toolbar md-scroll-shrink>
+        <div class="md-toolbar-tools">Results</div>
+      </md-toolbar>
       <md-card-content>
         <md-list>
           <md-list-item>Turnover: {{blockController.turnover}}</md-list-item>
