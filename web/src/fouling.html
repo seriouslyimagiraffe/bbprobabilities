@@ -1,11 +1,11 @@
 <div ng-include="'navbar.html'" style="height: 50px"
      ng-init="currentNavItem='fouling';"></div> 
-    <md-content class="md-padding">
-      <form name="playerForm"
-            flex="noshrink"
-            layout="column"
-            layout-align="start start">
-        <div style="width: 100%" layout="row" layout-align="start start">
+  <md-content class="md-padding">
+    <form name="playerForm"
+          flex="noshrink"
+          layout="column"
+          layout-align="start start">
+      <div style="width: 100%" layout="row" layout-align="start start">
         <md-input-container>
           <input ng-pattern="/^([1-9]|10)$/" ng-model="foulingController.av">
           <label>AV</label>
@@ -18,31 +18,33 @@
           <input ng-pattern="/^[0-5]$/" ng-model="foulingController.numBribes">
           <label>Number of Bribes</label>
         </md-input-container>
-        </div>
-        <div style="width: 100%" layout="row" layout-align="start, start">
-          <md-checkbox md-no-ink aria-label="DirtyPlayer" ng-model="foulingController.dirtyPlayer" class="md-primary">
-            Dirty Player
-          </md-checkbox>
-          <md-checkbox md-no-ink aria-label="Niggled" ng-model="foulingController.niggled" class="md-primary">
-            Niggled
-          </md-checkbox>
-          <md-checkbox md-no-ink aria-label="ThickSkull" ng-model="foulingController.thickSkull" class="md-primary">
-            Thick Skull
-          </md-checkbox>
-          <md-checkbox md-no-ink aria-label="Stunty" ng-model="foulingController.stunty" class="md-primary">
-            Stunty
-          </md-checkbox>
-        </div>
-        <div style="width: 100%" layout="column" layout-align="start, start">
-          <md-button ng-click="foulingController.stomp()" ng-disabled="foulingController.av == null" class="md-raised md-accent">STOMP</md-button>
-        </div>
-        <md-card class="md-block" flex="noshrink" style="width: 500px">
-          <md-card-content>
-            <md-list>
-            <md-list-item>Ejection probability: {{foulingController.ejection}}</md-list-item>
-            <md-list-item>Removal probability: {{foulingController.removal}}</md-list-item>
-            <md-list-item>Casualty probability: {{foulingController.cas}}</md-list-item>
-            </md-list>
-          </md-card-content>
-          </md-card>
-        </form>
+      </div>
+      <div style="width: 100%" layout="row" layout-align="start, start">
+        <md-checkbox md-no-ink aria-label="DirtyPlayer" ng-model="foulingController.dirtyPlayer" class="md-primary">
+          Dirty Player
+        </md-checkbox>
+        <md-checkbox md-no-ink aria-label="Niggled" ng-model="foulingController.niggled" class="md-primary">
+          Niggled
+        </md-checkbox>
+        <md-checkbox md-no-ink aria-label="ThickSkull" ng-model="foulingController.thickSkull" class="md-primary">
+          Thick Skull
+        </md-checkbox>
+        <md-checkbox md-no-ink aria-label="Stunty" ng-model="foulingController.stunty" class="md-primary">
+          Stunty
+        </md-checkbox>
+      </div>
+      <div style="width: 100%" layout="column" layout-align="start, start">
+        <md-button ng-click="foulingController.stomp()" ng-disabled="foulingController.av == null" class="md-raised md-accent">STOMP</md-button>
+      </div>
+      <md-card class="md-block" flex="noshrink" style="width: 500px">
+        <md-card-content>
+          <md-list>
+          <md-list-item>Ejection probability: {{foulingController.ejection}}</md-list-item>
+          <md-list-item>Removal probability: {{foulingController.removal}}</md-list-item>
+          <md-list-item>Casualty probability: {{foulingController.cas}}</md-list-item>
+          </md-list>
+        </md-card-content>
+      </md-card>
+    </form>
+  </md-content>
+</div>

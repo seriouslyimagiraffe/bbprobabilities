@@ -1,0 +1,103 @@
+<div ng-include="'navbar.html'" style="height: 50px"
+     ng-init="currentNavItem='blocking';">
+</div> 
+<md-content class="md-padding">
+  <form name="playerForm"
+        flex="noshrink"
+        layout="column"
+        layout-align="start start">
+    <md-card class="md-block">
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline">Victim</span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content layout="column" layout-align="start start">
+        <div style="width: 100%" layout="row" layout-align="start, start">
+          <md-input-container style="margin: 0">
+            <input aria-label="AV" 
+                   ng-pattern="/^([1-9]|1[0-2])$/" 
+                   ng-model="blockController.av">
+            <label>AV</label>
+          </md-input-container>
+          <md-input-container style="margin: 0" flex="30">
+            <label>Number of Dice</label>
+            <md-select aria-label="Number of dice"
+                       ng-model="blockController.numDice">
+              <md-option value="-3">-3</md-option>
+              <md-option value="-2">2</md-option>
+              <md-option value="1">1</md-option>
+              <md-option value="2">2</md-option>
+              <md-option value="3">3</md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div style="width: 100%" layout="row" layout-align="start, start">
+          <md-checkbox aria-label="block" md-no-ink aria-label="Block" ng-model="blockController.victimBlock" class="md-primary">
+            Block
+          </md-checkbox>
+          <md-checkbox aria-label="wrestle" md-no-ink aria-label="Wrestle" ng-model="blockController.victimWrestle" class="md-primary">
+            Wrestle
+          </md-checkbox>
+          <md-checkbox md-no-ink aria-label="Dodge" ng-model="blockController.dodge" class="md-primary">
+            Dodge
+          </md-checkbox>
+          <md-checkbox md-no-ink aria-label="Niggled" ng-model="blockController.niggled" class="md-primary">
+            Niggled
+          </md-checkbox>
+          <md-checkbox md-no-ink aria-label="Thick Skull" ng-model="blockController.thickSkull" class="md-primary">
+            Thick Skull
+          </md-checkbox>
+          <md-checkbox md-no-ink aria-label="Stunty" ng-model="blockController.stunty" class="md-primary">
+            Stunty
+          </md-checkbox>
+        </div>
+      </md-card-content>
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline">Attacker</span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content layout="column" layout-align="start start">
+        <div style="width: 100%" layout="row" layout-align="start, start">
+          <md-checkbox aria-label="block" md-no-ink aria-label="Block" ng-model="blockController.attackerBlock" class="md-primary">
+            Block
+          </md-checkbox>
+          <md-checkbox aria-label="block" md-no-ink aria-label="Block" ng-model="blockController.attackerWrestle" class="md-primary">
+            Wrestle
+          </md-checkbox>
+          <md-checkbox md-no-ink aria-label="Mighty Blow" ng-model="blockController.mightyBlow" class="md-primary">
+            Mighty Blow
+          </md-checkbox>
+          <md-checkbox md-no-ink aria-label="Piling on" ng-model="blockController.pilingOn" class="md-primary">
+            Piling On
+          </md-checkbox>
+          <md-checkbox md-no-ink aria-label="Claw" ng-model="blockController.claw" class="md-primary">
+            Claw
+          </md-checkbox>
+        </div>
+      </md-card-content>
+      <md-card-actions layout="column" layout-align="start">
+        <md-button class="md-primary" ng-disabled="blockController.av == null || 
+                                                   blockController.av == '' || 
+                                                   blockController.numDice == null"
+                    ng-click="blockController.pow()">
+          POW
+        </md-button>
+      </md-card-actions>
+    </md-card>
+    <md-card class="md-block" flex="noshrink" style="width: 500px">
+      <md-card-content>
+        <md-list>
+          <md-list-item>Turnover: {{blockController.turnover}}</md-list-item>
+          <md-list-item>Both Standing: {{blockController.push}}</md-list-item>
+          <md-list-item>Knockdown: {{blockController.knockdown}}</md-list-item>
+          <md-list-item>Stun: {{blockController.stun}}</md-list-item>
+          <md-list-item>Removal: {{blockController.removal}}</md-list-item>
+          <md-list-item>Casualty: {{blockController.cas}}</md-list-item>
+        </md-list>
+      </md-card-content>
+    </md-card>
+  </form>
+</md-content>
+</div>
