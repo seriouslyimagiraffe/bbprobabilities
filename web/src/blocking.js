@@ -18,6 +18,7 @@
      this.mightyBlow;
      this.pilingOn;
      this.claw;
+     this.tackle;
      
      this.turnover = 0;
      this.push = 0;
@@ -38,19 +39,19 @@
       var blockResults = [0, 0, 0, 0, 0];
 if (this.attackerBlock) {
         if (this.victimBlock) {
-          if (this.dodge) {
+          if (this.dodge && !this.tackle) {
             blockResults = [1.0/6.0, 1.0/6.0, 1.0/2.0, 1.0/6.0, 0.0];
           } else {
             blockResults = [1.0/6.0, 1.0/6.0, 1.0/3.0, 1.0/3.0, 0.0];
           }
         } else if (this.victimWrestle) {
-          if (this.dodge) {
+          if (this.dodge && !this.tackle) {
             blockResults = [1.0/6.0, 0, 1.0/2.0, 1.0/6.0, 1.0/6.0];
           } else {
             blockResults = [1.0/6.0, 0, 1.0/3.0, 1.0/3.0, 1.0/6.0];
           }
         } else {
-          if (this.dodge) {
+          if (this.dodge && !this.tackle) {
             blockResults = [1.0/6.0, 0, 1.0/2.0, 1.0/3.0, 0.0];
           } else {
             blockResults = [1.0/6.0, 0, 1.0/3.0, 1.0/2.0, 0.0];
@@ -58,13 +59,13 @@ if (this.attackerBlock) {
         }
       } else if (this.attackerWrestle) {
         if (this.victimBlock || this.victimWrestle) {
-          if (this.dodge) {
+          if (this.dodge && !this.tackle) {
             blockResults = [1.0/6.0, 0.0, 1.0/2.0, 1.0/6.0, 1.0/6.0];
           } else {
             blockResults = [1.0/6.0, 0.0, 1.0/3.0, 1.0/3.0, 1.0/6.0];
           }
         } else {
-          if (this.dodge) {
+          if (this.dodge && !this.tackle) {
             blockResults = [1.0/6.0, 0.0, 1.0/2.0, 1.0/6.0, 1.0/6.0];
           } else {
             blockResults = [1.0/6.0, 0, 1.0/3.0, 1.0/3.0, 1.0/6.0];
@@ -72,19 +73,19 @@ if (this.attackerBlock) {
         }
       } else {
         if (this.victimBlock) {
-          if (this.dodge) {
+          if (this.dodge && !this.tackle) {
             blockResults = [1.0/3.0, 0, 1.0/2.0, 1.0/6.0, 0.0];
           } else {
             blockResults = [1.0/3.0, 0, 1.0/3.0, 1.0/3.0, 0.0];
           }
         } else if (this.victimWrestle) {
-          if (this.dodge) {
+          if (this.dodge && !this.tackle) {
             blockResults = [1.0/6.0, 0, 1.0/2.0, 1.0/6.0, 1.0/6.0];
           } else {
             blockResults = [1.0/6.0, 0, 1.0/3.0, 1.0/3.0, 1.0/6.0];
           }
         } else {
-          if (this.dodge) {
+          if (this.dodge && !this.tackle) {
             blockResults = [1.0/3.0, 0, 1.0/2.0, 1.0/6.0, 0.0];
           } else {
             blockResults = [1.0/3.0, 0, 1.0/3.0, 1.0/3.0, 0.0];
@@ -156,24 +157,35 @@ if (this.attackerBlock) {
       
       var removalAfterArmorRoll = 0.0;
       var noArmorBreakProb = 0.0;
+      var stunAfterArmorRoll = 0.0;
+      
       if (this.mightyBlow) {
         removalAfterArmorRoll = noMbArmorBreak * mbRemovalProb + this.twod6[Math.max(avbrTarget - 1, 0)] * noMbRemovalProb;
+        stunAfterArmorRoll =  noMbArmorBreak * (1 - mbRemovalProb) + this.twod6[Math.max(avbrTarget - 1, 0)] * (1 - noMbRemovalProb);
         if (this.pilingOn) {
           var noArmorBreakProb = (1 - noMbArmorBreak - this.twod6[Math.max(avbrTarget - 1, 0)]);
-          removalAfterArmorRoll = removalAfterArmorRoll + noArmorBreakProb * removalAfterArmorRoll +
-               noMbArmorBreak * (1 - mbRemovalProb) * mbRemovalProb + 
-               this.twod6[Math.max(avbrTarget - 1, 0)] * (1 - noMbRemovalProb) * noMbRemovalProb;
+          removalAfterArmorRoll = removalAfterArmorRoll + 
+                                  noArmorBreakProb * removalAfterArmorRoll + 
+                                  noMbArmorBreak * (1 - mbRemovalProb) * mbRemovalProb + 
+                                  this.twod6[Math.max(avbrTarget - 1, 0)] * (1 - noMbRemovalProb) * noMbRemovalProb;
+          stunAfterArmorRoll = noMbArmorBreak * (1 - mbRemovalProb) * (1 - mbRemovalProb) + 
+                               this.twod6[Math.max(avbrTarget - 1, 0)] * (1 - noMbRemovalProb) * (1 - noMbRemovalProb) + 
+                               (1 - noMbArmorBreak - this.twod6[Math.max(avbrTarget - 1, 0)]) * stunAfterArmorRoll;
         }
       } else {
-        removalAfterArmorRoll =  knockdownWithArmorRoll * noMbArmorBreak * noMbRemovalProb;
+        removalAfterArmorRoll = noMbArmorBreak * noMbRemovalProb;
+        stunAfterArmorRoll = noMbArmorBreak * (1 - noMbRemovalProb);
         if (this.pilingOn) {
-          var noArmorBreakProb = (1 - noMbArmorBreak);
-          removalAfterArmorRoll = removalAfterArmorRoll + noArmorBreakProb * removalAfterArmorRoll +
-               noMbArmorBreak * (1 - noMbRemovalProb) * noMbRemovalProb;
+          removalAfterArmorRoll = noMbArmorBreak * noMbRemovalProb +
+                                  (1 - noMbArmorBreak) * noMbArmorBreak * (1 - noMbRemovalProb) +
+                                  noMbArmorBreak * (1 - noMbRemovalProb) * noMbRemovalProb;
+          stunAfterArmorRoll = noMbArmorBreak * (1 - noMbRemovalProb) * (1 - noMbRemovalProb) + 
+                               (1 - noMbArmorBreak) * noMbArmorBreak * (1 - noMbRemovalProb);
         }
       }
+      
       this.removal = knockdownWithArmorRoll * removalAfterArmorRoll;  
-      this.stun = knockdownWithArmorRoll - this.removal;
+      this.stun = knockdownWithArmorRoll * stunAfterArmorRoll;
       
       var noMbCas = 0;
       var casStart = 10;
@@ -190,21 +202,21 @@ if (this.attackerBlock) {
       
       var casAfterArmorRoll = 0.0;
       if (this.mightyBlow) {
-        casAfterArmorRoll = knockdownWithArmorRoll * (noMbArmorBreak * mbCas + this.twod6[Math.max(avbrTarget - 1, 0)] * noMbCas);
+        casAfterArmorRoll = (noMbArmorBreak * mbCas + this.twod6[Math.max(avbrTarget - 1, 0)] * noMbCas);
         if (this.pilingOn) {
           casAfterArmorRoll = casAfterArmorRoll + noArmorBreakProb * casAfterArmorRoll + 
               noMbArmorBreak * (1 - mbCas) * mbCas + 
               this.twod6[Math.max(avbrTarget - 1, 0)] * (1 - noMbCas) * noMbCas;
         }
       } else {
-        casAfterArmorRoll = knockdownWithArmorRoll * noMbArmorBreak * noMbCas;
+        casAfterArmorRoll = noMbArmorBreak * noMbCas;
         if (this.pilingOn) {
           casAfterArmorRoll = casAfterArmorRoll + noArmorBreakProb * casAfterArmorRoll + 
               noMbArmorBreak * (1- noMbCas) * noMbCas;
         }
       }
       this.cas = knockdownWithArmorRoll * casAfterArmorRoll;
-      
+
       this.turnover = this.turnover.toFixed(2);
       this.push = this.push.toFixed(2);
       this.knockdown = this.knockdown.toFixed(2);
