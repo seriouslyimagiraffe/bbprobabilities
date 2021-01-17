@@ -1,5 +1,5 @@
 (function(angular) {
-  function AppController() {
+  function FoulingController() {
      this.isDisabled = false;
      this.selectedTarget = null;
      this.players = loadAll();
@@ -18,71 +18,6 @@
      this.thisSkull;
      this.stunty;
      this.av;
-   
-    /**
-     * The current header (displayed in the toolbar and page title), or null to hide header text.
-     *
-     * @export
-     * @type {?string}
-     */
-    this.header = "Blood Bowl Probabilities";
-
-    /**
-     * The path the back button should go to, or null to hide the back button.
-     *
-     * @export
-     * @type {?string}
-     */
-    this.backPath = "/home";
-
-    /**
-     * Whether the toolbar should be displayed.
-     *
-     * @export
-     * @type {boolean}
-     */
-    this.showHeader = true;
-
-    /**
-     * The function which causes the current page to refresh.
-     *
-     * @export
-     * @type {?function():angular.$q.Promise}
-     */
-    this.refresher = null;
-
-    /**
-     * Whether the most recent refresh succeeded, or null to indicate that a refresh is in progress.
-     *
-     * @export
-     * @type {?boolean}
-     */
-    this.refreshStatus = true;
-
-    /**
-     * The current page title. Appended to the header and displayed as the <title>.
-     *
-     * @export
-     * @type {string}
-     */
-    this.title = "Tichu Tournament";
-    
-    /**
-     * Whether to show a hamburger menu in the header. To minimize congestion
-     * try to avoid having showMenu - true and backPath != null.
-     *
-     * @export
-     * @type {?boolean}
-     */
-    this.showMenu = false;
-
-    /**
-     * Function to be called when the menu button is clicked.
-     *
-     * @export
-     * @type {?function()}
-     */
-    this.openMenu = null;
   }
   
   function selectedItemChange(item) {}
@@ -179,46 +114,18 @@
       this.removal = this.removal.toFixed(2)
     }
 
-
   
-  /**
-   * Runs the refresh, toggling the status of the refresh variable appropriately.
-   */
-  AppController.prototype.refresh = function refresh() {
-    if (!this.refresher) {
-      return;
-    }
-    this.refreshStatus = null;
-    var self = this;
-    this.refresher.call(null).then(function() {
-      self.refreshStatus = true;
-    }).catch(function() {
-      self.refreshStatus = false;
-    });
-  };
-  
-  function setDefaultRoute($routeProvider) {
-    $routeProvider.otherwise("/fouls");
+   function mapRoute($routeProvider) {
+     $routeProvider
+        .when("/fouls", {
+          templateUrl: "web/src/fouling.html",
+          controller: "FoulingController",
+          controllerAs: "foulingController"
+        });
   }
   
-   
-   /**
-   * Sets up the Angular Material theme.
-   *
-   * @param {!$mdThemingProvider} $mdThemingProvider
-   * @ngInject
-   */
-  function configureTheme($mdThemingProvider){
-    $mdThemingProvider.theme('default')
-        .primaryPalette('red')
-        .accentPalette('blue');
-  }
 
-  angular.module("bloodbowl", ["ng",
-          "ngMaterial",
-          "ngRoute",
-          "fouling"])
-      .controller("AppController", AppController)
-      .config(configureTheme)
-      .config(setDefaultRoute);
+  angular.module("fouling", ["ng", "ngRoute", "fame"])
+      .controller("FoulingController", FoulingController)
+      .config(mapRoute);
 })(angular); 
