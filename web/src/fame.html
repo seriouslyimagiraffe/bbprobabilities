@@ -10,7 +10,7 @@
           </md-toolbar>
           <md-card-title>
             <md-card-title-text>
-              <span class="md-headline">Victim (skills)</span>
+              <span class="md-headline">Victim)</span>
             </md-card-title-text>
           </md-card-title>
           <md-card-content layout="column" layout-align="start start">
@@ -31,13 +31,16 @@
           </md-card-content>
         </md-card>
         <md-card class="md-block" flex="noshrink" style="width: 500px">
+          <md-toolbar md-scroll-shrink>
+              <div class="md-toolbar-tools">Results</div>
+          </md-toolbar>
           <md-card-content>
             <md-list>
-            <md-list-item>Player 1 haaaaaaas +2 Fame: {{fameController.p1bytwo}}</md-list-item>
-            <md-list-item>Player 1 has +1 Fame: {{fameController.p1byone}}</md-list-item>
-            <md-list-item>No Fame Difference: {{fameController.draw}}</md-list-item>
-            <md-list-item>Player 2 has +1 Fame: {{fameController.p2byone}}</md-list-item>
-            <md-list-item>Player 2 has +2 Fame: {{fameController.p2bytwo}}</md-list-item>
+              <md-list-item>Player 1 has +2 Fame: {{fameController.p1bytwo}}</md-list-item>
+              <md-list-item>Player 1 has +1 Fame: {{fameController.p1byone}}</md-list-item>
+              <md-list-item>No Fame Difference: {{fameController.draw}}</md-list-item>
+              <md-list-item>Player 2 has +1 Fame: {{fameController.p2byone}}</md-list-item>
+              <md-list-item>Player 2 has +2 Fame: {{fameController.p2bytwo}}</md-list-item>
              </md-list>
           </md-card-content>
         </md-card>
