@@ -1,7 +1,7 @@
 (function(angular) {
   function BlockController() {
-     this.twod6 = [0, 0, 0.0276, 0.0556, 0.0833, 0.1111, 0.1389, 0.1667, 0.1389, 0.1111, 
-                   0.0833, 0.0556, 0.0276];
+     this.twod6 = [0, 0, 0.02778, 0.05556, 0.08333, 0.11111, 0.13889, 0.16667, 0.13889, 0.11111, 
+                   0.08333, 0.05556, 0.02778];
 
      this.av;
      this.numDice = 2;
@@ -37,7 +37,7 @@
       // Array has the following probabilities for a single die:
       //   turnover, no result, push, knockdown (armor roll), knockdown (no armor roll)
       var blockResults = [0, 0, 0, 0, 0];
-if (this.attackerBlock) {
+      if (this.attackerBlock) {
         if (this.victimBlock) {
           if (this.dodge && !this.tackle) {
             blockResults = [1.0/6.0, 1.0/6.0, 1.0/2.0, 1.0/6.0, 0.0];
@@ -177,7 +177,7 @@ if (this.attackerBlock) {
         stunAfterArmorRoll = noMbArmorBreak * (1 - noMbRemovalProb);
         if (this.pilingOn) {
           removalAfterArmorRoll = noMbArmorBreak * noMbRemovalProb +
-                                  (1 - noMbArmorBreak) * noMbArmorBreak * (1 - noMbRemovalProb) +
+                                  (1 - noMbArmorBreak) * noMbArmorBreak * noMbRemovalProb +
                                   noMbArmorBreak * (1 - noMbRemovalProb) * noMbRemovalProb;
           stunAfterArmorRoll = noMbArmorBreak * (1 - noMbRemovalProb) * (1 - noMbRemovalProb) + 
                                (1 - noMbArmorBreak) * noMbArmorBreak * (1 - noMbRemovalProb);
@@ -205,14 +205,14 @@ if (this.attackerBlock) {
         casAfterArmorRoll = (noMbArmorBreak * mbCas + this.twod6[Math.max(avbrTarget - 1, 0)] * noMbCas);
         if (this.pilingOn) {
           casAfterArmorRoll = casAfterArmorRoll + noArmorBreakProb * casAfterArmorRoll + 
-              noMbArmorBreak * (1 - mbCas) * mbCas + 
-              this.twod6[Math.max(avbrTarget - 1, 0)] * (1 - noMbCas) * noMbCas;
+              noMbArmorBreak * (1 - mbRemovalProb) * mbCas + 
+              this.twod6[Math.max(avbrTarget - 1, 0)] * (1 - noMbRemovalProb) * noMbCas;
         }
       } else {
         casAfterArmorRoll = noMbArmorBreak * noMbCas;
         if (this.pilingOn) {
           casAfterArmorRoll = casAfterArmorRoll + noArmorBreakProb * casAfterArmorRoll + 
-              noMbArmorBreak * (1- noMbCas) * noMbCas;
+              noMbArmorBreak * (1- noMbRemovalProb) * noMbCas;
         }
       }
       this.cas = knockdownWithArmorRoll * casAfterArmorRoll;
