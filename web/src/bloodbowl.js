@@ -35,7 +35,9 @@
           "ngMaterial",
           "ngRoute",
           "fouling",
-          "blocking"])
+          "blocking",
+          "buildoptimizer",
+          "fame"])
       .controller("AppController", AppController)
       .config(configureTheme)
       .config(setDefaultRoute);
