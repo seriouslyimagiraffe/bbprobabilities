@@ -32,6 +32,7 @@
   }
 
   angular.module("bloodbowl", ["ng",
+          "md.data.table",
           "ngMaterial",
           "ngRoute",
           "fouling",

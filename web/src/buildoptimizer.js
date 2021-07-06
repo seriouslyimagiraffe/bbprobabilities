@@ -5,7 +5,6 @@
 
      this.playerAv;
      this.$log = $log;
-     this.$log.log("HI");
 
      this.startingBlock;
      this.startingWrestle;
@@ -13,24 +12,23 @@
      this.startingClaw;
      this.startingMb;
      
-     this.skill1;
-     this.skill2;
-     this.skill3;
-     this.skill4;
-     this.skill5;
-     
-     
-     this.expectedFirstSkill;
-     this.expectedSecondSkill;
-     this.expectedThirdSkill;
-     this.expectedFourthSkill;
-     this.expectedFifthSkill;
-     this.expectedSixthSkill;
      this.evaluate = evaluate;
+     this.evaluateBuild = evaluateBuild;
      this.probTurnover = probTurnover;
      this.probCauseInjuryOnKnockdown = probCauseInjuryOnKnockdown;
      this.probKnockdown = probKnockdown;
      this.prodDeadGivenTurnover = prodDeadGivenTurnover;
+     this.selectBuild = selectBuild;
+     
+     this.buildOn = [false, false, false];
+     
+     this.skills = [[null, null, null, null, null],
+                    [null, null, null, null, null],
+                    [null, null, null, null, null]];
+     this.expectedBlocksToSkill = [[0, 0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0, 0],
+                                   [0, 0, 0, 0, 0, 0]];
+     this.minBlocks = [-1, -1, -1, -1, -1, -1];
   }
   
   var BLOCK = "block";
@@ -39,6 +37,10 @@
   var FRENZY = "frenzy";
   var CLAW = "claw";
   var NONE = "none";
+  
+  function selectBuild(index) {
+    this.buildOn[index] = !this.buildOn[index]
+  }
   
   function probTurnover(skillsList) {
     if (skillsList.includes(FRENZY)) {
@@ -86,9 +88,6 @@
     }
   }
   
-    
-  
-  
   function probKnockdown(skillsList) {
     if (skillsList.includes(FRENZY)) {
       if (skillsList.includes(BLOCK)) {
@@ -103,80 +102,78 @@
       return 5.0 / 9.0;
     }
   }
+  
+  function evaluateBuild(index) {
+    skillsList = []
+    if (this.startingBlock) {
+      skillsList.push(BLOCK)
+    }
+    if (this.startingWrestle) {
+      skillsList.push(WRESTLE)
+    }
+    if (this.startingMb) {
+      skillsList.push(MB)
+    }
+    if (this.startingClaw) {
+      skillsList.push(CLAW)
+    }
+    if (this.startingFrenzy) {
+      skillsList.push(FRENZY)
+    }
+        
+    var prodDeadGivenTurnover = this.prodDeadGivenTurnover(parseInt(this.playerAv));
+    previous_expectation = 0
+    for (i = 2; i < 177; i+=2) {
+      var probCauseInjuryOnKnockdown = this.probCauseInjuryOnKnockdown(skillsList);
+      var probTurnover = this.probTurnover(skillsList);
+      var probKnockdown = this.probKnockdown(skillsList);
+      var probDead = prodDeadGivenTurnover * probTurnover;
+      var probSpp =  probCauseInjuryOnKnockdown * probKnockdown;
+      
+      previous_expectation = 
+          (1 + probDead / probSpp) * previous_expectation + 1 / probSpp;
+    
+      if (i == 6) {
+        this.expectedBlocksToSkill[index][0] = Math.round(previous_expectation);
+        skillsList.push(this.skills[index][0]);
+      }
+      if (i == 16) {
+        this.expectedBlocksToSkill[index][1] = Math.round(previous_expectation);
+        skillsList.push(this.skills[index][1]);
+      }
+      if (i == 32) {
+        this.expectedBlocksToSkill[index][2] = Math.round(previous_expectation);
+        skillsList.push(this.skills[index][2]);
+      }
+      if (i == 52) {
+        this.expectedBlocksToSkill[index][3] = Math.round(previous_expectation);
+        skillsList.push(this.skills[index][3]);
+      }
+      if (i == 76) {
+        this.expectedBlocksToSkill[index][4] = Math.round(previous_expectation);
+        skillsList.push(this.skills[index][4]);
+      }
+      if (i == 176) {
+        this.expectedBlocksToSkill[index][5] = Math.round(previous_expectation);
+      }
+    }
+  }
     
   function evaluate() {
-      skillsList = []
-      if (this.startingBlock) {
-        skillsList.push(BLOCK)
-      }
-      if (this.startingWrestle) {
-        skillsList.push(WRESTLE)
-      }
-      if (this.startingMb) {
-        skillsList.push(MB)
-      }
-      if (this.startingClaw) {
-        skillsList.push(CLAW)
-      }
-      if (this.startingFrenzy) {
-        skillsList.push(FRENZY)
-      }
-      
-      
-      var prodDeadGivenTurnover = this.prodDeadGivenTurnover(parseInt(this.playerAv));
-      this.$log.log(prodDeadGivenTurnover);
-      previous_expectation = 0
-      for (i = 2; i < 177; i+=2) {
-        this.$log.log(i);
-        var probCauseInjuryOnKnockdown = this.probCauseInjuryOnKnockdown(skillsList);
-        var probTurnover = this.probTurnover(skillsList);
-        var probKnockdown = this.probKnockdown(skillsList);
-        var probDead = prodDeadGivenTurnover * probTurnover;
-        var probSpp =  probCauseInjuryOnKnockdown * probKnockdown;
-        this.$log.log(probDead);
-        this.$log.log(probSpp);
-      
-        previous_expectation = 
-            (1 + probDead / probSpp) * previous_expectation + 1 / probSpp;
-        this.$log.log("expectation");
-        this.$log.log(previous_expectation);
-        if (i == 6) {
-          this.expectedFirstSkill = previous_expectation.toFixed(0);
-          if (this.skill1 != NONE) {
-            skillsList.push(this.skill1);
-          }
-        }
-        if (i == 16) {
-          this.expectedSecondSkill = previous_expectation.toFixed(0);
-          if (this.skill2 != NONE) {
-            skillsList.push(this.skill2);
-          }
-        }
-        if (i == 32) {
-          this.expectedThirdSkill = previous_expectation.toFixed(0);
-          if (this.skill3 != NONE) {
-            skillsList.push(this.skill3);
-          }
-        }
-        if (i == 52) {
-          this.expectedFourthSkill = previous_expectation.toFixed(0);
-          if (this.skill4 != NONE) {
-            skillsList.push(this.skill4);
-          }
-        }
-        if (i == 76) {
-          this.expectedFifthSkill = previous_expectation.toFixed(0);
-          if (this.skill5 != NONE) {
-            skillsList.push(this.skill4);
-          }
-        }
-        if (i == 176) {
-          this.expectedSixthSkill = previous_expectation.toFixed(0);
+    for (j = 0; j < 3; j++) {
+      this.evaluateBuild(j);
+    }
+    for (i = 0; i < 6; i++) {
+      min_blocks = 10000000000;
+      for (j = 0; j < 3; j++) {
+        if (this.expectedBlocksToSkill[j][i] != 0 && 
+            this.expectedBlocksToSkill[j][i] < min_blocks) {
+          this.minBlocks[i] = this.expectedBlocksToSkill[j][i];
+          min_blocks = this.expectedBlocksToSkill[j][i];
         }
       }
     }
-    
-
+  }
   
    function mapRoute($routeProvider) {
      $routeProvider
@@ -188,7 +185,7 @@
   }
   
 
-  angular.module("buildoptimizer", ["ng", "ngRoute"])
+  angular.module("buildoptimizer", ["ng", "ngRoute", "md.data.table"])
       .controller("BuildOptController", BuildOptController)
       .config(mapRoute);
 })(angular); 

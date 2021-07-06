@@ -47,126 +47,49 @@
       </md-card-content>
       <md-card-title>
         <md-card-title-text>
-          <span class="md-headline">Proposed Build</span>
+          <span class="md-headline">Builds</span>
         </md-card-title-text>
       </md-card-title>
       <md-card-content layout="column" layout-align="start start">
-        <div style="width: 100%" layout="row" layout-align="start, start">
-          <md-input-container style="margin: 0 2" flex="30">
-            <label>Skill 1</label>
-            <md-select aria-label="Skill 1"
-                       ng-model="buildOptController.skill1">
-              <md-option value="none">None</md-option>
-              <md-option value="frenzy" ng-disabled=buildOptController.startingFrenzy>
-                Frenzy
-              </md-option>
-              <md-option value="block"  ng-disabled=buildOptController.startingBlock>
-                Block
-              </md-option>
-              <md-option value="mb"  ng-disabled=buildOptController.startingMb>
-                Mighty Blow
-              </md-option>
-              <md-option value="claw"  ng-disabled=buildOptController.startingClaw>
-                Claw
-              </md-option>
-            </md-select>
-          </md-input-container>
-          <md-input-container style="margin: 0 2" flex="30">
-            <label>Skill 2</label>
-            <md-select aria-label="Skill 2"
-                       ng-model="buildOptController.skill2">
-              <md-option value="none">None</md-option>
-              <md-option value="frenzy" 
-                         ng-disabled="buildOptController.startingFrenzy || buildOptController.skill1 == 'frenzy'">
-                Frenzy
-              </md-option>
-              <md-option value="block" 
-                         ng-disabled="buildOptController.startingBlock ||  buildOptController.skill1 == 'block'">
-                Block
-              </md-option>
-              <md-option value="mb"  
-                         ng-disabled="buildOptController.startingMb || buildOptController.skill1 == 'mb'">
-                Mighty Blow
-              </md-option>
-              <md-option value="claw" 
-                         ng-disabled="buildOptController.startingClaw || buildOptController.skill1 == 'claw'">
-                Claw
-              </md-option>
-            </md-select>
-          </md-input-container>
-          <md-input-container style="margin: 0 2" flex="30">
-            <label>Skill 3</label>
-            <md-select aria-label="Skill 3"
-                       ng-model="buildOptController.skill3">
-              <md-option value="none">None</md-option>
-              <md-option value="frenzy" 
-                         ng-disabled="buildOptController.startingFrenzy || buildOptController.skill1 == 'frenzy' || buildOptController.skill2 == 'frenzy'">
-                Frenzy
-              </md-option>
-              <md-option value="block" 
-                         ng-disabled="buildOptController.startingBlock ||  buildOptController.skill1 == 'block' || buildOptController.skill2 == 'block'">
-                Block
-              </md-option>
-              <md-option value="mb"  
-                         ng-disabled="buildOptController.startingMb || buildOptController.skill1 == 'mb' || buildOptController.skill2 == 'mb'">
-                Mighty Blow
-              </md-option>
-              <md-option value="claw" 
-                         ng-disabled="buildOptController.startingClaw || buildOptController.skill1 == 'claw' || buildOptController.skill2 == 'claw'">
-                Claw
-              </md-option>
-            </md-select>
-          </md-input-container>
+      <md-list style="width: 100%">
+     
+      <md-list-item style="width: 100%" 
+          ng-repeat="skills in buildOptController.skills"
+          ng-click="buildOptController.selectBuild($index)">
+        <div style="width: 100%" layout="row" layout-align="start, start"
+            ng-hide="buildOptController.buildOn[$index]">Build {{$index + 1}}
         </div>
-        <div style="width: 100%" layout="row" layout-align="start, start">
-          <md-input-container style="margin: 0 2" flex="30">
-            <label>Skill 4</label>
-            <md-select aria-label="Skill 4"
-                       ng-model="buildOptController.skill4">
+        <div style="width: 100%" layout="row" layout-align="start, start"
+            ng-hide="!buildOptController.buildOn[$index]">
+        
+          <md-input-container ng-repeat="i in [0, 1, 2, 3, 4]" style="margin: 0 2" flex="30">
+            <md-select aria-label="Skill {{$index + 1}}"
+                       ng-model="buildOptController.skills[$parent.$index][$index]" class="md-no-underline"
+                       placeholder="Skill {{$index + 1}}">
               <md-option value="none">None</md-option>
-              <md-option value="frenzy" 
-                         ng-disabled="buildOptController.startingFrenzy || buildOptController.skill1 == 'frenzy' || buildOptController.skill2 == 'frenzy' || buildOptController.skill3 == 'frenzy'">
+              <md-option value="frenzy" ng-disabled="buildOptController.startingFrenzy || buildOptController.skills[$parent.$index].slice(0, $index).includes('frenzy')">
                 Frenzy
               </md-option>
-              <md-option value="block" 
-                         ng-disabled="buildOptController.startingBlock ||  buildOptController.skill1 == 'block' || buildOptController.skill2 == 'block' || buildOptController.skill3 == 'block'">
+              <md-option value="block"  ng-disabled="buildOptController.startingBlock || buildOptController.skills[$parent.$index].slice(0, $index).includes('block')">
                 Block
               </md-option>
-              <md-option value="mb"  
-                         ng-disabled="buildOptController.startingMb || buildOptController.skill1 == 'mb' || buildOptController.skill2 == 'mb' || buildOptController.skill3 == 'mb'">
+              <md-option value="mb"  ng-disabled="buildOptController.startingMb || buildOptController.skills[$parent.$index].slice(0, $index).includes('mb')">
                 Mighty Blow
               </md-option>
-              <md-option value="claw" 
-                         ng-disabled="buildOptController.startingClaw || buildOptController.skill1 == 'claw' || buildOptController.skill2 == 'claw' || buildOptController.skill3 == 'claw'">
+              <md-option value="claw"  ng-disabled="buildOptController.startingClaw || buildOptController.skills[$parent.$index].slice(0, $index).includes('claw')">
                 Claw
               </md-option>
             </md-select>
           </md-input-container>
-          <md-input-container style="margin: 0 2" flex="30">
-            <label>Skill 5</label>
-            <md-select aria-label="Skill 5"
-                       ng-model="buildOptController.skill5">
-              <md-option value="none">None</md-option>
-              <md-option value="frenzy" 
-                         ng-disabled="buildOptController.startingFrenzy || buildOptController.skill1 == 'frenzy' || buildOptController.skill2 == 'frenzy' || buildOptController.skill3 == 'frenzy' || buildOptController.skill4 == 'frenzy'">
-                Frenzy
-              </md-option>
-              <md-option value="block" 
-                         ng-disabled="buildOptController.startingBlock ||  buildOptController.skill1 == 'block' || buildOptController.skill2 == 'block' || buildOptController.skill3 == 'block' || buildOptController.skill4 == 'block'">
-                Block
-              </md-option>
-              <md-option value="mb"  
-                         ng-disabled="buildOptController.startingMb || buildOptController.skill1 == 'mb' || buildOptController.skill2 == 'mb' || buildOptController.skill3 == 'mb' || buildOptController.skill4 == 'mb'">
-                Mighty Blow
-              </md-option>
-              <md-option value="claw" 
-                         ng-disabled="buildOptController.startingClaw || buildOptController.skill1 == 'claw' || buildOptController.skill2 == 'claw' || buildOptController.skill3 == 'claw' || buildOptController.skill4 == 'claw'">
-                Claw
-              </md-option>
-            </md-select>
-          </md-input-container>
-        </div>
+        </div>      
+        <md-divider ng-if="!$last"></md-divider>
+      </md-list-item>
+     
+      </md-list>
       </md-card-content>
+      
+      
+      
       <md-card-actions layout="column" layout-align="start">
         <md-button class="md-primary" ng-disabled="buildOptController.playerAv == null || 
                                                    buildOptController.playerAv == ''"
@@ -180,15 +103,46 @@
         <div class="md-toolbar-tools">Results</div>
       </md-toolbar>
       <md-card-content>
-        <md-list>
-          <md-list-item>Expected {{buildOptController.expectedFirstSkill}} blocks until 6SPP: Gains {{buildOptController.skill1}} </md-list-item>
-          <md-list-item>Expected {{buildOptController.expectedSecondSkill}} blocks until 16SPP: Gains {{buildOptController.skill2}} </md-list-item>
-          <md-list-item>Expected {{buildOptController.expectedThirdSkill}} blocks until 31SPP: Gains {{buildOptController.skill3}} </md-list-item>
-          <md-list-item>Expected {{buildOptController.expectedFourthSkill}} blocks until 51SPP: Gains {{buildOptController.skill4}} </md-list-item>
-          <md-list-item>Expected {{buildOptController.expectedFifthSkill}} blocks until 76SPP: Gains {{buildOptController.skill5}} </md-list-item>
-          <md-list-item>Expected {{buildOptController.expectedSixthSkill}} blocks until 176SPP</md-list-item>
-        </md-list>
-      </md-card-content>
+      <md-table-container>
+        <table md-table md-progress="promise">
+          <thead md-head>
+            <tr md-row>
+              <th md-column<span>SPP</span></th>
+              <th md-column<span>Expected Blocks Build 1</span></th>
+              <th md-column<span>Expected Blocks Build 2</span></th>
+              <th md-column<span>Expected Blocks Build 3</span></th>
+            </tr>
+          </thead>
+          <tbody md-body>
+            <tr md-row ng-repeat="i in [6, 16, 31, 51, 76, 176]">
+              <td md-cell style="text-align: center">{{i}}</td>
+              <td md-cell style="text-align: center" ng-style="{'background-color': buildOptController.minBlocks[$index] == buildOptController.expectedBlocksToSkill[0][$index] ? '#BCF478' : 'white' }" ">
+                          {{buildOptController.expectedBlocksToSkill[0][$index]}}</td>
+              <td md-cell ng-style="{ 'background-color': buildOptController.minBlocks[$index] == buildOptController.expectedBlocksToSkill[1][$index] ? '#BCF478' : 'white' }" 
+                          style="text-align: center" ng-if="(buildOptController.skills[1][0] != null && 
+                                                            buildOptController.skills[1][0] != 'none') || 
+                                                            (buildOptController.skills[1][1] != null &&  
+                                                            buildOptController.skills[1][1] != 'none') ||  
+                                                            (buildOptController.skills[1][2] != null && 
+                                                            buildOptController.skills[1][2] != 'none') ||  
+                                                            (buildOptController.skills[1][3] != null &&  
+                                                            buildOptController.skills[1][3] != 'none') ||  
+                                                            (buildOptController.skills[1][4] != null &&  
+                                                            buildOptController.skills[1][4] != 'none')">{{buildOptController.expectedBlocksToSkill[1][$index]}}</td>
+              <td md-cell ng-style="{ 'background-color': buildOptController.minBlocks[$index] == buildOptController.expectedBlocksToSkill[2][$index] ? '#BCF478' : 'white' }" 
+                          style="text-align: center" ng-if="(buildOptController.skills[2][0] != null &&  
+                                                            buildOptController.skills[2][0] != 'none') ||  
+                                                            (buildOptController.skills[2][1] != null && 
+                                                            buildOptController.skills[2][1] != 'none') ||  
+                                                            (buildOptController.skills[2][2] != null &&  
+                                                            buildOptController.skills[2][2] != 'none') || 
+                                                            (buildOptController.skills[2][3] != null &&  
+                                                            buildOptController.skills[2][3] != 'none') || 
+                                                            (buildOptController.skills[2][4] != null &&  
+                                                            buildOptController.skills[2][4] != 'none')">{{buildOptController.expectedBlocksToSkill[2][$index]}}</td>
+            </tr>
+          </tbody>
+       </table>
     </md-card>
   </form>
 </md-content>
