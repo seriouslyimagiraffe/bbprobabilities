@@ -1,10 +1,8 @@
 <div ng-include="'navbar.html'" style="height: 50px" ng-init="currentNavItem='fame';"></div> 
-    <md-content class="md-padding">
-      <form name="playerForm"
-            flex="noshrink"
-            layout="column"
-            layout-align="start start">
-        <md-card class="md-block">
+    <md-content class="md-padding" layout="column"
+                layout-align="start start" 
+                style="max-width: 400px">
+        <md-card class="md-block" style="min-width: 100%">
           <md-toolbar class="md-accent" md-scroll-shrink>
               <div class="md-toolbar-tools">Input</div>
           </md-toolbar>
@@ -29,7 +27,7 @@
             </md-card-actions>
           </md-card-content>
         </md-card>
-        <md-card class="md-block" flex="noshrink" style="width: 500px">
+        <md-card class="md-block" style="min-width: 100%">
           <md-toolbar md-scroll-shrink>
               <div class="md-toolbar-tools">Results</div>
           </md-toolbar>
@@ -43,6 +41,5 @@
              </md-list>
           </md-card-content>
         </md-card>
-      </form>
     </md-content>
 </div>

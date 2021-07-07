@@ -1,12 +1,10 @@
 <div ng-include="'navbar.html'" style="height: 50px"
      ng-init="currentNavItem='buildoptimizer';">
 </div> 
-<md-content class="md-padding">
-  <form name="playerForm"
-        flex="noshrink"
+<md-content class="md-padding" style="max-width: 750px" 
         layout="column"
         layout-align="start start">
-    <md-card class="md-block">
+    <md-card class="md-block" style="min-width:100%">
       <md-toolbar class="md-accent" md-scroll-shrink>
           <div class="md-toolbar-tools">Input</div>
       </md-toolbar>
@@ -98,7 +96,7 @@
         </md-button>
       </md-card-actions>
     </md-card>
-    <md-card class="md-block" flex="noshrink" style="width: 657px">
+    <md-card class="md-block" class="md-block" style="min-width:100%">
       <md-toolbar md-scroll-shrink>
         <div class="md-toolbar-tools">Results</div>
       </md-toolbar>
@@ -166,6 +164,5 @@
           </tbody>
        </table>
     </md-card>
-  </form>
 </md-content>
 </div>
