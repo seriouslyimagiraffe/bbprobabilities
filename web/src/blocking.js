@@ -1,5 +1,5 @@
 (function(angular) {
-  function BlockController() {
+  function BlockController($log) {
      this.twod6 = [0, 0, 0.02778, 0.05556, 0.08333, 0.11111, 0.13889, 0.16667, 0.13889, 0.11111, 
                    0.08333, 0.05556, 0.02778];
 
@@ -19,6 +19,7 @@
      this.pilingOn;
      this.claw;
      this.tackle;
+     this.frenzy;
      
      this.turnover = 0;
      this.push = 0;
@@ -28,194 +29,64 @@
      this.cas = 0;
     
      this.pow = pow;
-
+     this.$log = $log;
   }
 
     
     function pow() {
-      // TODO: Fix Block/Wrestle combo.
-      // Array has the following probabilities for a single die:
-      //   turnover, no result, push, knockdown (armor roll), knockdown (no armor roll)
-      var blockResults = [0, 0, 0, 0, 0];
-      if (this.attackerBlock) {
-        if (this.victimBlock) {
-          if (this.dodge && !this.tackle) {
-            blockResults = [1.0/6.0, 1.0/6.0, 1.0/2.0, 1.0/6.0, 0.0];
-          } else {
-            blockResults = [1.0/6.0, 1.0/6.0, 1.0/3.0, 1.0/3.0, 0.0];
-          }
-        } else if (this.victimWrestle) {
-          if (this.dodge && !this.tackle) {
-            blockResults = [1.0/6.0, 0, 1.0/2.0, 1.0/6.0, 1.0/6.0];
-          } else {
-            blockResults = [1.0/6.0, 0, 1.0/3.0, 1.0/3.0, 1.0/6.0];
-          }
-        } else {
-          if (this.dodge && !this.tackle) {
-            blockResults = [1.0/6.0, 0, 1.0/2.0, 1.0/3.0, 0.0];
-          } else {
-            blockResults = [1.0/6.0, 0, 1.0/3.0, 1.0/2.0, 0.0];
-          }
-        }
-      } else if (this.attackerWrestle) {
-        if (this.victimBlock || this.victimWrestle) {
-          if (this.dodge && !this.tackle) {
-            blockResults = [1.0/6.0, 0.0, 1.0/2.0, 1.0/6.0, 1.0/6.0];
-          } else {
-            blockResults = [1.0/6.0, 0.0, 1.0/3.0, 1.0/3.0, 1.0/6.0];
-          }
-        } else {
-          if (this.dodge && !this.tackle) {
-            blockResults = [1.0/6.0, 0.0, 1.0/2.0, 1.0/6.0, 1.0/6.0];
-          } else {
-            blockResults = [1.0/6.0, 0, 1.0/3.0, 1.0/3.0, 1.0/6.0];
-          }
-        }
-      } else {
-        if (this.victimBlock) {
-          if (this.dodge && !this.tackle) {
-            blockResults = [1.0/3.0, 0, 1.0/2.0, 1.0/6.0, 0.0];
-          } else {
-            blockResults = [1.0/3.0, 0, 1.0/3.0, 1.0/3.0, 0.0];
-          }
-        } else if (this.victimWrestle) {
-          if (this.dodge && !this.tackle) {
-            blockResults = [1.0/6.0, 0, 1.0/2.0, 1.0/6.0, 1.0/6.0];
-          } else {
-            blockResults = [1.0/6.0, 0, 1.0/3.0, 1.0/3.0, 1.0/6.0];
-          }
-        } else {
-          if (this.dodge && !this.tackle) {
-            blockResults = [1.0/3.0, 0, 1.0/2.0, 1.0/6.0, 0.0];
-          } else {
-            blockResults = [1.0/3.0, 0, 1.0/3.0, 1.0/3.0, 0.0];
-          }
-        }
-      }
-      
       var numDice = parseInt(this.numDice);
-      var knockdownWithArmorRoll = 0.0;
-      var knockownWithoutArmorRoll = 0.0;
-      
-      if (numDice == -3) {
-        this.turnover = blockResults[0] + 
-                       (1 - blockResults[0]) * (blockResults[0] + 
-                                                (1 - blockResults[0]) * blockResults[0]);
-        this.knockdown = (blockResults[3] + blockResults[4]) * (blockResults[3] + blockResults[4]) * (blockResults[3] + blockResults[4]);
-        knockdownWithArmorRoll = blockResults[3] * blockResults[3] * blockResults[3];
-      } else if (numDice == -2) {
-        this.turnover = blockResults[0] + (1 - blockResults[0]) * blockResults[0];
-        this.knockdown = (blockResults[3] + blockResults[4]) * (blockResults[3] + blockResults[4]);
-        knockdownWithArmorRoll = blockResults[3] * blockResults[3];
-      } else if (numDice == 1) {
-        this.turnover = blockResults[0];
-        this.knockdown = blockResults[3] + blockResults[4];
-        knockdownWithArmorRoll = blockResults[3];
-      } else if (numDice == 2) {
-        this.turnover = blockResults[0] * blockResults[0];
-        this.knockdown = (blockResults[3] + blockResults[4]) + (1 - blockResults[3] - blockResults[4]) * (blockResults[3] + blockResults[4])
-        knockdownWithArmorRoll = blockResults[3] + (1 - blockResults[3]) * blockResults[3];
-      } else {
-        this.turnover = blockResults[0] * blockResults[0] * blockResults[0];
-        this.knockdown = (blockResults[3] + blockResults[4]) +
-                         (1 - blockResults[3] - blockResults[4]) * ((blockResults[3] + blockResults[4]) + 
-                                                                    (1 - blockResults[3] - blockResults[4]) * (blockResults[3] + blockResults[4]));
-        knockdownWithArmorRoll = blockResults[3] + (1 - blockResults[3]) * (blockResults[3] + (1 - blockResults[3]) * blockResults[3]);
+      var attackerSkills = [];
+      var victimSkills = [];
+      if (this.attackerBlock) {
+        attackerSkills.push(BLOCK);
       }
-      knockdownWithoutArmorRoll = this.knockdown - knockdownWithArmorRoll;
-      this.push = 1.0 - this.turnover - this.knockdown;
-        
-        
-      // Armor rolls
-      var avbrTarget = parseInt(this.av) + 1;
+      if (this.attackerWrestle) {
+        attackerSkills.push(WRESTLE);
+      }
       if (this.claw) {
-        avbrTarget = Math.min(8, avbrTarget);
+        attackerSkills.push(CLAW);
       }
-      var noMbArmorBreak = 0;
-      var mbArmorBreak = 0;
-      for (i = avbrTarget; i < 13; i++) {
-        noMbArmorBreak += this.twod6[i];
+      if (this.mightyBlow) {
+        attackerSkills.push(MB);
       }
-      mbArmorBreak = noMbArmorBreak + this.twod6[Math.max(avbrTarget - 1, 0)];
-      
-      // Injury rolls
-      var noMbRemovalProb = 0;
-      var koStart = 8;
-      if (this.stunty) {
-        koStart -= 1;
+      if (this.pilingOn) {
+        attackerSkills.push(PO);
+      }
+      if (this.tackle) {
+        attackerSkills.push(TACKLE);
+      }
+      if (this.frenzy) {
+        attackerSkills.push(FRENZY);
+      }
+      if (this.victimBlock) {
+        victimSkills.push(BLOCK);
+      }
+      if (this.victimWrestle) {
+        victimSkills.push(WRESTLE);
+      }
+      if (this.dodge) {
+        victimSkills.push(DODGE);
       }
       if (this.niggled) {
-        koStart -= 1;
+        victimSkills.push(NIGGLED);
       }
       if (this.thickSkull) {
-        koStart += 1;
+        victimSkills.push(THICK_SKULL);
       }
-      for (i = koStart; i < 13; i++) {
-        noMbRemovalProb += this.twod6[i];
-      }
-      var mbRemovalProb = noMbRemovalProb + this.twod6[koStart - 1];
-      
-      var removalAfterArmorRoll = 0.0;
-      var noArmorBreakProb = 0.0;
-      var stunAfterArmorRoll = 0.0;
-      
-      if (this.mightyBlow) {
-        removalAfterArmorRoll = noMbArmorBreak * mbRemovalProb + this.twod6[Math.max(avbrTarget - 1, 0)] * noMbRemovalProb;
-        stunAfterArmorRoll =  noMbArmorBreak * (1 - mbRemovalProb) + this.twod6[Math.max(avbrTarget - 1, 0)] * (1 - noMbRemovalProb);
-        if (this.pilingOn) {
-          var noArmorBreakProb = (1 - noMbArmorBreak - this.twod6[Math.max(avbrTarget - 1, 0)]);
-          removalAfterArmorRoll = removalAfterArmorRoll + 
-                                  noArmorBreakProb * removalAfterArmorRoll + 
-                                  noMbArmorBreak * (1 - mbRemovalProb) * mbRemovalProb + 
-                                  this.twod6[Math.max(avbrTarget - 1, 0)] * (1 - noMbRemovalProb) * noMbRemovalProb;
-          stunAfterArmorRoll = noMbArmorBreak * (1 - mbRemovalProb) * (1 - mbRemovalProb) + 
-                               this.twod6[Math.max(avbrTarget - 1, 0)] * (1 - noMbRemovalProb) * (1 - noMbRemovalProb) + 
-                               (1 - noMbArmorBreak - this.twod6[Math.max(avbrTarget - 1, 0)]) * stunAfterArmorRoll;
-        }
-      } else {
-        removalAfterArmorRoll = noMbArmorBreak * noMbRemovalProb;
-        stunAfterArmorRoll = noMbArmorBreak * (1 - noMbRemovalProb);
-        if (this.pilingOn) {
-          removalAfterArmorRoll = noMbArmorBreak * noMbRemovalProb +
-                                  (1 - noMbArmorBreak) * noMbArmorBreak * noMbRemovalProb +
-                                  noMbArmorBreak * (1 - noMbRemovalProb) * noMbRemovalProb;
-          stunAfterArmorRoll = noMbArmorBreak * (1 - noMbRemovalProb) * (1 - noMbRemovalProb) + 
-                               (1 - noMbArmorBreak) * noMbArmorBreak * (1 - noMbRemovalProb);
-        }
-      }
-      
-      this.removal = knockdownWithArmorRoll * removalAfterArmorRoll;  
-      this.stun = knockdownWithArmorRoll * stunAfterArmorRoll;
-      
-      var noMbCas = 0;
-      var casStart = 10;
       if (this.stunty) {
-        casStart -= 1;
+        victimSkills.push(STUNTY);
       }
-      if (this.niggled) {
-        casStart -= 1;
-      }
-      for (i = casStart; i < 13; i++) {
-        noMbCas += this.twod6[i];
-      }
-      var mbCas = noMbCas + this.twod6[casStart - 1];
       
-      var casAfterArmorRoll = 0.0;
-      if (this.mightyBlow) {
-        casAfterArmorRoll = (noMbArmorBreak * mbCas + this.twod6[Math.max(avbrTarget - 1, 0)] * noMbCas);
-        if (this.pilingOn) {
-          casAfterArmorRoll = casAfterArmorRoll + noArmorBreakProb * casAfterArmorRoll + 
-              noMbArmorBreak * (1 - mbRemovalProb) * mbCas + 
-              this.twod6[Math.max(avbrTarget - 1, 0)] * (1 - noMbRemovalProb) * noMbCas;
-        }
-      } else {
-        casAfterArmorRoll = noMbArmorBreak * noMbCas;
-        if (this.pilingOn) {
-          casAfterArmorRoll = casAfterArmorRoll + noArmorBreakProb * casAfterArmorRoll + 
-              noMbArmorBreak * (1- noMbRemovalProb) * noMbCas;
-        }
-      }
-      this.cas = knockdownWithArmorRoll * casAfterArmorRoll;
+      this.knockdown = probKnockdown(attackerSkills, victimSkills, numDice, false, true, this.$log);
+      this.turnover = probTurnover(attackerSkills, victimSkills, numDice, this.$log);
+      this.push = 1.0 - this.turnover - this.knockdown;
+       
+      this.removal = removalOnBlock(parseInt(this.av), numDice, attackerSkills, victimSkills,
+          this.$log);
+      this.stun = stunOnBlock(parseInt(this.av), numDice, attackerSkills, victimSkills,
+          this.$log);
+      this.cas = probCasOnBlock(parseInt(this.av), numDice, attackerSkills, victimSkills,
+          this.$log);
 
       this.turnover = this.turnover.toFixed(2);
       this.push = this.push.toFixed(2);

@@ -1,7 +1,7 @@
 <div ng-include="'navbar.html'" style="height: 50px"
      ng-init="currentNavItem='buildoptimizer';">
 </div> 
-<md-content class="md-padding" style="max-width: 750px" 
+<md-content class="md-padding" style="max-width: 800px" 
         layout="column"
         layout-align="start start">
     <md-card class="md-block" style="min-width:100%">
@@ -26,20 +26,26 @@
           <span class="md-subhead">Starting Skills</span>
         </md-card-title-text>
         <div style="width: 100%" layout="row" layout-align="start, start">
-          <md-checkbox aria-label="block" md-no-ink aria-label="Block" ng-model="buildOptController.startingBlock" class="md-primary">
+          <md-checkbox aria-label="block" md-no-ink ng-model="buildOptController.startingBlock" class="md-primary">
             Block
           </md-checkbox>
-          <md-checkbox aria-label="frenzy" md-no-ink aria-label="Wrestle" ng-model="buildOptController.startingFrenzy" class="md-primary">
+          <md-checkbox aria-label="frenzy" md-no-ink ng-model="buildOptController.startingFrenzy" class="md-primary">
             Frenzy
           </md-checkbox>
-          <md-checkbox aria-label="mighty blow" md-no-ink aria-label="Wrestle" ng-model="buildOptController.startingMb" class="md-primary">
+          <md-checkbox aria-label="mighty blow" md-no-ink ng-model="buildOptController.startingMb" class="md-primary">
             Mighty Blow
           </md-checkbox>
-          <md-checkbox aria-label="claw" md-no-ink aria-label="Wrestle" ng-model="buildOptController.startingClaw" class="md-primary">
+          <md-checkbox aria-label="claw" md-no-ink ng-model="buildOptController.startingClaw" class="md-primary">
             Claw
           </md-checkbox>
-          <md-checkbox aria-label="wrestle" md-no-ink aria-label="Wrestle" ng-model="buildOptController.startingWrestle" class="md-primary">
+          <md-checkbox aria-label="wrestle" md-no-ink ng-model="buildOptController.startingWrestle" class="md-primary">
             Wrestle
+          </md-checkbox>
+          <md-checkbox aria-label="piling on" md-no-ink  ng-model="buildOptController.startingPo" class="md-primary">
+            Piling On
+          </md-checkbox>
+          <md-checkbox aria-label="tackle" md-no-ink  ng-model="buildOptController.startingTackle" class="md-primary">
+            Tackle
           </md-checkbox>
         </div>
       </md-card-content>
@@ -76,6 +82,12 @@
               </md-option>
               <md-option value="claw"  ng-disabled="buildOptController.startingClaw || buildOptController.skills[$parent.$index].slice(0, $index).includes('claw')">
                 Claw
+              </md-option>
+              <md-option value="po"  ng-disabled="buildOptController.startingPo || buildOptController.skills[$parent.$index].slice(0, $index).includes('po')">
+                Piling On
+              </md-option>
+              <md-option value="tackle"  ng-disabled="buildOptController.startingTackle || buildOptController.skills[$parent.$index].slice(0, $index).includes('tackle')">
+                Tackle
               </md-option>
             </md-select>
           </md-input-container>

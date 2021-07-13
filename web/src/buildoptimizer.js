@@ -11,10 +11,12 @@
      this.startingFrenzy;
      this.startingClaw;
      this.startingMb;
+     this.startingPo;
+     this.startingTackle;
      
      this.evaluate = evaluate;
      this.evaluateBuild = evaluateBuild;
-     this.probTurnover = probTurnover;
+     this.avgProbTurnover = avgProbTurnover;
      this.probCauseInjuryOnKnockdown = probCauseInjuryOnKnockdown;
      this.probKnockdown = probKnockdown;
      this.prodDeadGivenTurnover = prodDeadGivenTurnover;
@@ -30,32 +32,16 @@
                                    [0, 0, 0, 0, 0, 0]];
      this.minBlocks = [-1, -1, -1, -1, -1, -1];
   }
-  
-  var BLOCK = "block";
-  var WRESTLE = "wrestle";
-  var MB = "mb";
-  var FRENZY = "frenzy";
-  var CLAW = "claw";
-  var NONE = "none";
-  
+   
   function selectBuild(index) {
     this.buildOn[index] = !this.buildOn[index]
   }
   
-  function probTurnover(skillsList) {
-    if (skillsList.includes(FRENZY)) {
-      if (skillsList.includes(BLOCK)) {
-        return 1.0/36 + 1.0/9 * 1.0/36;
-      }
-      if (skillsList.includes(WRESTLE)) {
-        return 1.0/36 + 2.0/9 * 1.0/36; 
-      }
-      return 1.0/9 + 1.0/81;
-    }
-    if (skillsList.includes(BLOCK) || skillsList.includes(WRESTLE)) {
-      return 1.0/36
-    }
-    return 1.0/9
+  function avgProbTurnover(skillsList) {
+    return 0.25 * probTurnover(skillsList, [], 2, this.$log) + 
+        0.25 * probTurnover(skillsList, [BLOCK], 2, this.$log) +
+        0.25 * probTurnover(skillsList, [DODGE], 2, this.$log) + 
+        0.25 * probTurnover(skillsList, [BLOCK, DODGE], 2, this.$log);
   }
   
   function prodDeadGivenTurnover(av) {
@@ -73,34 +59,10 @@
   }
   
   function probCauseInjuryOnKnockdown(skillsList) {
-    if (skillsList.includes(CLAW)) {
-      if (skillsList.includes(MB)) {
-        return 0.1435214815
-      } else {
-        return 0.0694463889
-      }
-    } else {
-      if (skillsList.includes(MB)) {
-        return 0.10031052470000001;
-      } else {
-        return 0.04629759260000001
-      }
-    }
-  }
-  
-  function probKnockdown(skillsList) {
-    if (skillsList.includes(FRENZY)) {
-      if (skillsList.includes(BLOCK)) {
-        return 0.5 * (5.0 / 9.0 + 4.0 / 9.0 * 5.0 / 9.0) + 
-               0.5 * (0.75 + 4.0 / 9.0 * 0.75);
-      }
-      return (5.0 / 9.0 + 4.0 / 9.0 * 5.0 / 9.0);
-    }
-    if (skillsList.includes(BLOCK)) {
-      return  0.75 * 0.5 + 0.5 * 5.0 / 9.0;
-    } else {
-      return 5.0 / 9.0;
-    }
+    return 0.25 * probCasOnBlock(8, 2, skillsList, [BLOCK], this.$log) + 
+        0.25 * probCasOnBlock(8, 2, skillsList, [DODGE], this.$log) + 
+        0.25 * probCasOnBlock(8, 2, skillsList, [BLOCK, DODGE], this.$log) + 
+        0.25 * probCasOnBlock(8, 2, skillsList, [], this.$log);
   }
   
   function evaluateBuild(index) {
@@ -120,40 +82,45 @@
     if (this.startingFrenzy) {
       skillsList.push(FRENZY)
     }
+    if (this.startingPo) {
+      skillsList.push(PO)
+    } 
+    if (this.startingTackle) {
+      skillsList.push(TACKLE);
+    }
         
     var prodDeadGivenTurnover = this.prodDeadGivenTurnover(parseInt(this.playerAv));
     previous_expectation = 0
-    for (i = 2; i < 177; i+=2) {
+    for (var spp = 2; spp < 177; spp+=2) {
       var probCauseInjuryOnKnockdown = this.probCauseInjuryOnKnockdown(skillsList);
-      var probTurnover = this.probTurnover(skillsList);
-      var probKnockdown = this.probKnockdown(skillsList);
-      var probDead = prodDeadGivenTurnover * probTurnover;
-      var probSpp =  probCauseInjuryOnKnockdown * probKnockdown;
+      var turnoverProb = this.avgProbTurnover(skillsList);
+      var probDead = prodDeadGivenTurnover * turnoverProb;
+      var probSpp =  probCauseInjuryOnKnockdown;
       
       previous_expectation = 
           (1 + probDead / probSpp) * previous_expectation + 1 / probSpp;
     
-      if (i == 6) {
+      if (spp == 6) {
         this.expectedBlocksToSkill[index][0] = Math.round(previous_expectation);
         skillsList.push(this.skills[index][0]);
       }
-      if (i == 16) {
+      if (spp == 16) {
         this.expectedBlocksToSkill[index][1] = Math.round(previous_expectation);
         skillsList.push(this.skills[index][1]);
       }
-      if (i == 32) {
+      if (spp == 32) {
         this.expectedBlocksToSkill[index][2] = Math.round(previous_expectation);
         skillsList.push(this.skills[index][2]);
       }
-      if (i == 52) {
+      if (spp == 52) {
         this.expectedBlocksToSkill[index][3] = Math.round(previous_expectation);
         skillsList.push(this.skills[index][3]);
       }
-      if (i == 76) {
+      if (spp == 76) {
         this.expectedBlocksToSkill[index][4] = Math.round(previous_expectation);
         skillsList.push(this.skills[index][4]);
       }
-      if (i == 176) {
+      if (spp == 176) {
         this.expectedBlocksToSkill[index][5] = Math.round(previous_expectation);
       }
     }

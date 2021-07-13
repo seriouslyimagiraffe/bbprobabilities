@@ -2,7 +2,7 @@
      ng-init="currentNavItem='blocking';">
 </div> 
 <md-content class="md-padding" layout="column" 
-            style="max-width: 750px" layout-align="start start">
+            style="max-width: 800px" layout-align="start start">
   <md-card class="md-block" style="min-width:100%">
     <md-toolbar class="md-accent" md-scroll-shrink>
       <div class="md-toolbar-tools">Input</div>
@@ -60,14 +60,17 @@
     </md-card-title>
     <md-card-content layout="column" layout-align="start start">
         <div style="width: 100%" layout="row" layout-align="start, start">
-          <md-checkbox aria-label="block" md-no-ink aria-label="Block" ng-model="blockController.attackerBlock" class="md-primary">
+          <md-checkbox aria-label="block" md-no-ink ng-model="blockController.attackerBlock" class="md-primary">
             Block
           </md-checkbox>
-          <md-checkbox aria-label="block" md-no-ink aria-label="Block" ng-model="blockController.attackerWrestle" class="md-primary">
+          <md-checkbox aria-label="wrestle" md-no-ink ng-model="blockController.attackerWrestle" class="md-primary">
             Wrestle
           </md-checkbox>
-          <md-checkbox aria-label="block" md-no-ink aria-label="Block" ng-model="blockController.tackle" class="md-primary">
+          <md-checkbox aria-label="tackle" md-no-ink ng-model="blockController.tackle" class="md-primary">
             Tackle
+          </md-checkbox>
+          <md-checkbox aria-label="frenzy" md-no-ink ng-model="blockController.frenzy" class="md-primary">
+            Frenzy
           </md-checkbox>
           <md-checkbox md-no-ink aria-label="Mighty Blow" ng-model="blockController.mightyBlow" class="md-primary">
             Mighty Blow
