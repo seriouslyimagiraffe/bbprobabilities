@@ -69,7 +69,8 @@
           <md-input-container ng-repeat="i in [0, 1, 2, 3, 4]" style="margin: 0 2" flex="30">
             <md-select aria-label="Skill {{$index + 1}}"
                        ng-model="buildOptController.skills[$parent.$index][$index]" class="md-no-underline"
-                       placeholder="Skill {{$index + 1}}">
+                       placeholder="Skill {{$index + 1}}"
+                       ng-change=buildOptController.clearResults()>
               <md-option value="none">None</md-option>
               <md-option value="frenzy" ng-disabled="buildOptController.startingFrenzy || buildOptController.skills[$parent.$index].slice(0, $index).includes('frenzy')">
                 Frenzy

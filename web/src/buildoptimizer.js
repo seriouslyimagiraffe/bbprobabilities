@@ -21,6 +21,7 @@
      this.probKnockdown = probKnockdown;
      this.prodDeadGivenTurnover = prodDeadGivenTurnover;
      this.selectBuild = selectBuild;
+     this.clearResults = clearResults;
      
      this.buildOn = [false, false, false];
      
@@ -33,6 +34,13 @@
      this.minBlocks = [-1, -1, -1, -1, -1, -1];
   }
    
+  function clearResults() {
+    this.expectedBlocksToSkill = [[0, 0, 0, 0, 0, 0],
+                                  [0, 0, 0, 0, 0, 0],
+                                  [0, 0, 0, 0, 0, 0]];
+    this.minBlocks = [-1, -1, -1, -1, -1, -1];
+  }
+  
   function selectBuild(index) {
     this.buildOn[index] = !this.buildOn[index]
   }
