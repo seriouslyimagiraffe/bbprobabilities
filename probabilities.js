@@ -126,7 +126,7 @@ function probKnockdown(attackerSkills, victimSkills, numDice, turnoverCounts, wr
           blockResults.wrestle * (wrestleCounts ? (1 - safe_non_desired_result) : blockResults.knockdown);
     if (frenzy) {
       return probKnockdownInOne + 
-          (1 - probKnockdownInOne - (non_knockdown_frenzy_stopper * non_knockdown_frenzy_stopper)) * probKnockdownInOne;
+          (1 - probKnockdownInOne - (non_knockdown_frenzy_stopper * non_knockdown_frenzy_stopper) - (turnover * turnover)) * probKnockdownInOne;
     } else {
       return probKnockdownInOne;
     }
@@ -145,7 +145,7 @@ function probKnockdown(attackerSkills, victimSkills, numDice, turnoverCounts, wr
           blockResults.wrestle * turnover * (wrestleCounts ? (1 - safe_non_desired_result) : blockResults.knockdown);
     if (frenzy) {
       return probKnockdownInOne + 
-          (1 - probKnockdownInOne - non_knockdown_frenzy_stopper * non_knockdown_frenzy_stopper * non_knockdown_frenzy_stopper) * probKnockdownInOne;
+          (1 - probKnockdownInOne - (non_knockdown_frenzy_stopper * non_knockdown_frenzy_stopper * non_knockdown_frenzy_stopper) - (turnover * turnover * turnover)) * probKnockdownInOne;
     } else {
       return probKnockdownInOne;
     }
