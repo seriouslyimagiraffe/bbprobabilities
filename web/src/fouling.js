@@ -81,10 +81,10 @@
       var dpRemovalProb = noDpRemovalProb + twod6[koStart - 1];
       
       if (this.dirtyPlayer) {
-        this.ejection = this.ejection + dpArmorBreak / 6;
+        this.ejection = this.ejection + ((1 - this.ejection) * (dpArmorBreak / 6));
         this.removal = noDpArmorBreak * dpRemovalProb + twod6[Math.max(avbrTarget - 1, 0)] * noDpRemovalProb;
       } else {
-        this.ejection = this.ejection + noDpArmorBreak * 0.1667;
+        this.ejection = this.ejection + ((1 - this.ejection) * (noDpArmorBreak / 6));
         this.removal = noDpArmorBreak * noDpRemovalProb;
       }
       
