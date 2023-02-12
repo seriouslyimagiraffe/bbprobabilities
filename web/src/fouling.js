@@ -51,18 +51,22 @@
     }
     
     function stomp() {
-      var twod6 = [0, 0, 0.0276, 0.0556, 0.0833, 0.1111, 0.1389, 0.1667, 0.1389, 0.1111, 
-                   0.0833, 0.0556, 0.0276];
-      var doubles = [0, 0, 1.0, 0, 0.3333, 0, 0.2, 0, 0.2, 0, 0.3333, 0, 1.0];
+      var twod6 = [0, 0, 1/36, 2/36, 3/36, 4/36, 5/36, 6/36, 5/36, 4/36, 
+                   3/36, 2/36, 1/36];
+      var doublesProbabilities = [0, 0, 1/36, 0, 1/36, 0, 1/36, 0, 1/36, 0, 1/36, 0, 1/36];
       var noDpArmorBreak = 0;
       var dpArmorBreak = 0;
       var avbrTarget = Math.max(parseInt(this.av) + 1 - parseInt(this.numAssists), 0);
-      
+      var noDpAvbrDoubles = 0;
+      var dpAvbrDoubles = 0;
+
       for (i = avbrTarget; i < 13; i++) {
         noDpArmorBreak += twod6[i];
+        noDpAvbrDoubles += doublesProbabilities[i];
       }
       dpArmorBreak = noDpArmorBreak + twod6[Math.max(avbrTarget - 1, 0)];
-      this.ejection = 0.1667;
+      dpAvbrDoubles = noDpAvbrDoubles + doublesProbabilities[Math.max(avbrTarget - 1, 0)]
+      this.ejection = 1/6;
       
       var noDpRemovalProb = 0;
       var koStart = 8;
@@ -81,10 +85,10 @@
       var dpRemovalProb = noDpRemovalProb + twod6[koStart - 1];
       
       if (this.dirtyPlayer) {
-        this.ejection = this.ejection + ((1 - this.ejection) * (dpArmorBreak / 6));
+        this.ejection = this.ejection + ((dpArmorBreak - dpAvbrDoubles) / 6);
         this.removal = noDpArmorBreak * dpRemovalProb + twod6[Math.max(avbrTarget - 1, 0)] * noDpRemovalProb;
       } else {
-        this.ejection = this.ejection + ((1 - this.ejection) * (noDpArmorBreak / 6));
+        this.ejection = this.ejection + ((noDpArmorBreak - noDpAvbrDoubles) / 6);
         this.removal = noDpArmorBreak * noDpRemovalProb;
       }
       
