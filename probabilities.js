@@ -75,7 +75,6 @@ function probKnockdown(attackerSkills, victimSkills, numDice, turnoverCounts, wr
   
   var frenzy = attackerSkills.includes(FRENZY);
   var knockDown = blockResults.knockdown;
-  var safe_non_desired_result = blockResults.push + blockResults.noresult;
   var non_knockdown_frenzy_stopper = blockResults.turnover + blockResults.noresult;
   var turnover = blockResults.turnover + blockResults.bothdownturnover;
   
@@ -106,7 +105,7 @@ function probKnockdown(attackerSkills, victimSkills, numDice, turnoverCounts, wr
     }
   } else if (numDice == -2) {
     if (frenzy) {
-      var probForcedPush =  blockResults.push * (1 - blockResults.noresult - blockResults.turnover) + 
+      var probForcedPush = blockResults.push * (1 - blockResults.noresult - blockResults.turnover) + 
           (blockResults.knockdown + blockResults.bothdownturnover + blockResults.wrestle) * blockResults.push;
       return knockDown * knockDown + probForcedPush * knockDown * knockDown;
     } else {
@@ -119,11 +118,7 @@ function probKnockdown(attackerSkills, victimSkills, numDice, turnoverCounts, wr
       return knockDown;
     }
   } else if (numDice == 2) {
-    var probKnockdownInOne = 
-        blockResults.knockdown + 
-          turnover * blockResults.knockdown + 
-          safe_non_desired_result * blockResults.knockdown + 
-          blockResults.wrestle * (wrestleCounts ? (1 - safe_non_desired_result) : blockResults.knockdown);
+    var probKnockdownInOne = knockDown + (1 - knockDown)*knockDown;
     if (frenzy) {
       return probKnockdownInOne + 
           (1 - probKnockdownInOne - (non_knockdown_frenzy_stopper * non_knockdown_frenzy_stopper) - (turnover * turnover)) * probKnockdownInOne;
@@ -131,18 +126,7 @@ function probKnockdown(attackerSkills, victimSkills, numDice, turnoverCounts, wr
       return probKnockdownInOne;
     }
   } else {
-    var probKnockdownInOne = 
-        blockResults.knockdown + 
-          turnover * blockResults.knockdown + 
-          turnover * turnover * knockDown + 
-          turnover * safe_non_desired_result * blockResults.knockdown + 
-          turnover * blockResults.wrestle * (wrestleCounts ? (1 - safe_non_desired_result) : blockResults.knockdown) +
-          safe_non_desired_result * blockResults.knockdown + 
-          safe_non_desired_result * (1 - blockResults.knockdown) * blockResults.knockdown + 
-          blockResults.wrestle * safe_non_desired_result * blockResults.knockdown + 
-          blockResults.wrestle * blockResults.knockdown + 
-          blockResults.wrestle * blockResults.wrestle * (wrestleCounts ? (1 - safe_non_desired_result) : blockResults.knockdown) + 
-          blockResults.wrestle * turnover * (wrestleCounts ? (1 - safe_non_desired_result) : blockResults.knockdown);
+    var probKnockdownInOne = knockDown + (1 - knockDown)*knockDown + (1 - knockDown)*(1-knockDown)*knockDown;
     if (frenzy) {
       return probKnockdownInOne + 
           (1 - probKnockdownInOne - (non_knockdown_frenzy_stopper * non_knockdown_frenzy_stopper * non_knockdown_frenzy_stopper) - (turnover * turnover * turnover)) * probKnockdownInOne;
